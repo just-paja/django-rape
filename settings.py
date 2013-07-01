@@ -13,7 +13,9 @@ RAPE_SERIAL = getattr(settings, 'RAPE_SERIAL', 1)
 
 RAPE_PATH = getattr(settings, 'RAPE_PATH', '%s/rape' % settings.ROOT)
 
-settings.PROJECT_NAME = getattr(settings, 'PROJECT_NAME')
+RAPE_PROJECT_NAME = getattr(settings, 'PROJECT_NAME')
+
 
 STATIC_ROOT = getattr(settings, 'STATIC_ROOT')
+
 STATIC_URL = getattr(settings, 'STATIC_URL')
