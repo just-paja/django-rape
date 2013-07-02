@@ -59,8 +59,8 @@ template.html
 	
 	<html>
 	<head>
-		<script type="text/javascript" src="{{ 'foo' | raped_script }}"></script>
-		<link rel="stylesheet" type="text/css" href="{{ 'screen' | raped_style }}">
+		<script type="text/javascript" src="{% raped_script 'foo' %}"></script>
+		<link rel="stylesheet" type="text/css" href="{% raped_style 'screen' %}">
 		...
 
 And that's it! Rape should handle the rest of it.
