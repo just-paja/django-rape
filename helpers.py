@@ -80,5 +80,5 @@ def replace_resource_urls(string):
 	return re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-z0-9\.\-\_]+)[\'\"]?\s\%\}', get_resource_url_from_match ,string, flags=re.IGNORECASE)
 
 
-def rape_resource_url(url)
+def rape_resource_url(url):
 	return '%s?serial=%d' % (url, settings.RAPE_SERIAL)
