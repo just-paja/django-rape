@@ -15,6 +15,7 @@ def resource(request, serial, name, res_type):
 			fp.close()
 
 			response['Content-Type'] = helpers.get_content_type(res_type)
+			response['Cache-Control'] = 'public, max-age=86400'
 
 			return response
 		else: raise Http404
