@@ -1,7 +1,7 @@
 import os
 from django.conf import settings
 
-ROOT = getattr(settings, 'ROOT', os.path.abspath(os.path.dirname(__file__) + "/.."))
+ROOT = getattr(settings, 'ROOT', os.path.abspath(os.path.dirname(__file__)))
 
 RAPED_SCRIPTS = getattr(settings, 'RAPED_SCRIPTS', {})
 
@@ -14,7 +14,6 @@ RAPE_SERIAL = getattr(settings, 'RAPE_SERIAL', 1)
 RAPE_PATH = getattr(settings, 'RAPE_PATH', '%s/rape' % settings.ROOT)
 
 RAPE_PROJECT_NAME = getattr(settings, 'PROJECT_NAME')
-
 
 STATIC_ROOT = getattr(settings, 'STATIC_ROOT')
 
