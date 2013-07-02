@@ -77,7 +77,7 @@ def get_resource_url_from_match(matchobj):
 
 
 def replace_resource_urls(string):
-	return re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-z0-9\.\-\_]+)[\'\"]?\s\%\}', get_resource_url_from_match ,string, flags=re.IGNORECASE)
+	return re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_]+)[\'\"]?\s\%\}', get_resource_url_from_match, string)
 
 
 def rape_resource_url(url):
