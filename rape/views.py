@@ -8,6 +8,7 @@ def resource(request, serial, name, res_type):
 	if int(serial) == settings.RAPE_SERIAL:
 		if helpers.exists(res_type, name):
 			if helpers.changed(res_type, name):
+				helpers.check_dirs(res_type)
 				generate_resource(res_type, name)
 
 			fp = open(helpers.get_output_path(res_type, name))

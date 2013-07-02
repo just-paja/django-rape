@@ -82,3 +82,18 @@ def replace_resource_urls(string):
 
 def rape_resource_url(url):
 	return '%s?serial=%d' % (url, settings.RAPE_SERIAL)
+
+
+def check_dirs(res_type):
+	check_dir("%s" % settings.STATIC_ROOT)
+	check_dir("%s/rape" % settings.STATIC_ROOT)
+	check_dir("%s/rape/%s" % (settings.STATIC_ROOT, res_type))
+
+
+def check_dir(path):
+	if not os.path.exists(path):
+		try:
+			os.makedirs(path)
+		except OSError as exception:
+			if exception.errno != errno.EEXIST:
+				raise
