@@ -1,6 +1,5 @@
 from django.core.urlresolvers import reverse
 from django import template
-from django.core.urlresolvers import reverse
 from rape import helpers, settings
 
 register = template.Library()
