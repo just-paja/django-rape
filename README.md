@@ -6,9 +6,15 @@ Django module for managing resources.
 
 Simple tool, that helps you minimize your traffic, site loading time and browser image caching.
 
+### Dependencies 
+
+Rape requires scss lib for parsing scss.
+https://github.com/klen/python-scss
+
 ### Known issues
 
-Scss @import will not work
+- Scss @import will not work
+- Scss code errors will result into fatal error while parsing
 
 
 ## Usage
@@ -37,6 +43,9 @@ Scss @import will not work
 				"style1_wide"
 			]
 		}
+		
+		# Minify files. Results into generating smaller files.		
+		RAPE_PACK = True
 		
 	template.html
 	
