@@ -1,18 +1,19 @@
 from django.core.urlresolvers import reverse
 from django import template
-from rape import helpers, settings
+from .. import helpers, settings
 
 register = template.Library()
+
 
 def rape_url(url):
 	return helpers.rape_url(url)
 
 
-def rape_script(name):
+def raped_script(name):
 	return reverse('raped_script', args=[settings.RAPE_SERIAL, name])
 
 
-def rape_style(name):
+def raped_style(name):
 	return reverse('raped_style', args=[settings.RAPE_SERIAL, name])
 
 
@@ -34,3 +35,6 @@ def rape_static_url(url, request=None):
 
 
 register.simple_tag(rape_url)
+register.simple_tag(rape_static_url)
+register.simple_tag(raped_script)
+register.simple_tag(raped_style)
