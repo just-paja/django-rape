@@ -23,14 +23,18 @@ https://github.com/klen/python-scss
 ## Usage
 
 1. Add `rape` into `INSTALLED_APPS`
-2. Move your scripts and styles into `RAPE_PATH`. It is "`ROOT`/rape" by default.
-3. Setup `RAPED_SCRIPTS` and `RAPED_STYLES`
-4. Use filters `raped_script` and `raped_style` to insert scripts and styles into django templates.
+2. Setup `ROOT` to point to your project dir. You wouldn't like the default.
+3. Move your scripts and styles into `RAPE_PATH`.
+4. Setup `RAPED_SCRIPTS` and `RAPED_STYLES`
+5. Use filters `raped_script` and `raped_style` to insert scripts and styles into django templates.
 
 
 ### Example
 
 settings.py
+
+	# Path to project
+	ROOT = os.path.abspath(os.path.dirname(__file__) + "/..")
 	
 	# Script lists under a name
 	RAPED_SCRIPTS = {
