@@ -18,20 +18,7 @@ def raped_style(name):
 
 
 def rape_static_url(url, request=None):
-	if request:
-		if request.is_secure(): protocol = 'https'
-		else: protocol = 'http'
-
-		return "%s://%s%s%s/%s?serial=%s" % (
-			protocol,
-			request.META['HTTP_HOST'],
-			settings.STATIC_URL,
-			settings.RAPE_PROJECT_NAME,
-			url,
-			settings.RAPE_SERIAL
-		)
-	else:
-		return "%s%s/%s?serial=%s" % (settings.STATIC_URL, settings.RAPE_PROJECT_NAME, url, settings.RAPE_SERIAL)
+	return helpers.rape_static_url(url, request)
 
 
 register.simple_tag(rape_url)

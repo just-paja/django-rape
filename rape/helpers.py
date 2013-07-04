@@ -73,15 +73,28 @@ def get_content_type(res_type):
 
 
 def get_resource_url_from_match(matchobj):
-	return rape_resource_url(matchobj.group(1))
+	return rape_static_url(matchobj.group(1))
 
 
 def replace_resource_urls(string):
 	return re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_]+)[\'\"]?\s\%\}', get_resource_url_from_match, string)
 
 
-def rape_resource_url(url):
-	return '%s?serial=%d' % (url, settings.RAPE_SERIAL)
+def rape_static_url(url, request=None):
+	if request:
+		if request.is_secure(): protocol = 'https'
+		else: protocol = 'http'
+
+		return "%s://%s%s%s/%s?serial=%s" % (
+			protocol,
+			request.META['HTTP_HOST'],
+			settings.STATIC_URL,
+			settings.RAPE_PROJECT_NAME,
+			url,
+			settings.RAPE_SERIAL
+		)
+	else:
+		return "%s%s/%s?serial=%s" % (settings.STATIC_URL, settings.RAPE_PROJECT_NAME, url, settings.RAPE_SERIAL)
 
 
 def check_dirs(res_type):
