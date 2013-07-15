@@ -1,5 +1,6 @@
 from datetime import timedelta
 import os, time, settings, helpers, re
+from django.core.urlresolvers import reverse
 
 
 def get_file_list(res_type, name):
@@ -76,8 +77,19 @@ def get_resource_url_from_match(matchobj):
 	return rape_static_url(matchobj.group(1))
 
 
+def get_raped_script_url_from_match(matchobj):
+	return reverse('raped_script', args=[settings.RAPE_SERIAL, matchobj.group(1)])
+
+
+def get_raped_style_url_from_match(matchobj):
+	return reverse('raped_style', args=[settings.RAPE_SERIAL, matchobj.group(1)])
+
+
 def replace_resource_urls(string):
-	return re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_]+)[\'\"]?\s\%\}', get_resource_url_from_match, string)
+	string = re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_]+)[\'\"]?\s\%\}', get_resource_url_from_match, string)
+	string = re.sub(r'\{\%\sraped_script\s[\'\"]?([\/a-zA-Z0-9\.\-\_]+)[\'\"]?\s\%\}', get_raped_script_url_from_match, string)
+	string = re.sub(r'\{\%\sraped_style\s[\'\"]?([\/a-zA-Z0-9\.\-\_]+)[\'\"]?\s\%\}', get_raped_style_url_from_match, string)
+	return string
 
 
 def rape_static_url(url, request=None):
