@@ -2,6 +2,13 @@
 
 Django module for managing js, (s)css and other website resources.
 
+## Features
+
+- Merges and compresses javascript and scss files into one
+- Manages serial numbers for resource URLs ('path/to/image?serial=1') inside templates, styles and javascripts
+- Define multiple css/js packages
+- Manage css/js order inside package
+
 
 ## Overview
 
