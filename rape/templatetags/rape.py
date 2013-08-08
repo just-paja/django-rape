@@ -6,7 +6,7 @@ register = template.Library()
 
 
 def rape_url(url):
-	return helpers.rape_url(url)
+	return helpers.rape_static_url(url)
 
 
 def raped_script(name):
