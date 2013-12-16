@@ -14,6 +14,7 @@ def pack(file_list, output, minify=False):
 	if settings.RAPE_PACK:
 		str_js = jsmin(str_js)
 
+	helpers.check_dir(os.path.dirname(output))
 	ofp = open(output, "w+")
 	ofp.write(str_js)
 	ofp.close()

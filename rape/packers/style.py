@@ -19,6 +19,7 @@ def pack(file_list, output, minify=False):
 	str_css = parser.loads(str_css)
 	#~ print "%s" % str_css
 
+	helpers.check_dir(os.path.dirname(output))
 	ofp = open(output, "w+")
 	ofp.write(str_css)
 	ofp.close()

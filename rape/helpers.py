@@ -34,13 +34,13 @@ def changed(res_type, name):
 
 
 def get_res_name(res_type, res_name):
-	return '%s/%s/%s.%s' % (settings.RAPE_PATH, res_type, res_name, get_postfix(res_type, True))
+	return '%s/%s.%s' % (settings.RAPE_PATH, res_name, get_postfix(res_type, True))
 
 
 def get_output_name(res_type, name):
 	arg = 'plain'
 	if settings.RAPE_PACK: arg = 'packed'
-	return 'rape/%s/%s.%s.%s.%s' % (res_type, name, arg, settings.RAPE_SERIAL, get_postfix(res_type))
+	return 'rape/%s/%s/%s.%s.%s' % (res_type, name, arg, settings.RAPE_SERIAL, get_postfix(res_type))
 
 
 def get_output_path(res_type, name):
