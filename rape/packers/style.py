@@ -1,6 +1,6 @@
 from StringIO import StringIO
 from rape import helpers, settings
-from scss.parser import Stylesheet
+from scss import Scss
 
 import os, os.path, shutil
 
@@ -12,11 +12,10 @@ def pack(file_list, output, minify=False):
 		str_css += helpers.replace_resource_urls(fp.read())
 		fp.close()
 
-	parser = Stylesheet(options = {
-		"compress":settings.RAPE_PACK
-	})
+	compiler = Scss()
+	str_css = compiler.compile(str_css)
 
-	str_css = parser.loads(str_css)
+	#~ str_css = parser.loads()
 	#~ print "%s" % str_css
 
 	helpers.check_dir(os.path.dirname(output))
