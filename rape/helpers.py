@@ -86,9 +86,9 @@ def get_raped_style_url_from_match(matchobj):
 
 
 def replace_resource_urls(string):
-	string = re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_]+)[\'\"]?\s\%\}', get_resource_url_from_match, string)
-	string = re.sub(r'\{\%\sraped_script\s[\'\"]?([\/a-zA-Z0-9\.\-\_]+)[\'\"]?\s\%\}', get_raped_script_url_from_match, string)
-	string = re.sub(r'\{\%\sraped_style\s[\'\"]?([\/a-zA-Z0-9\.\-\_]+)[\'\"]?\s\%\}', get_raped_style_url_from_match, string)
+	string = re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', get_resource_url_from_match, string)
+	string = re.sub(r'\{\%\sraped_script\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', get_raped_script_url_from_match, string)
+	string = re.sub(r'\{\%\sraped_style\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', get_raped_style_url_from_match, string)
 	return string
 
 
