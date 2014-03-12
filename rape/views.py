@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, Http404, HttpResponseForbidden
 from django.core.urlresolvers import reverse
 from packers import script, style
-import os, time, settings, helpers
+import re, os, time, settings, helpers
 
 
 def resource(request, serial, name, res_type):
@@ -12,7 +12,7 @@ def resource(request, serial, name, res_type):
 				generate_resource(res_type, name)
 
 			fp = open(helpers.get_output_path(res_type, name))
-			response = HttpResponse(fp.read())
+			response = HttpResponse(re.sub(r'{{HOST}}', request.META['HTTP_HOST'], fp.read()))
 			fp.close()
 
 			response['Content-Type'] = helpers.get_content_type(res_type)
