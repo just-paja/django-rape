@@ -1,6 +1,7 @@
 from datetime import timedelta
 import os, time, settings, helpers, re
 from django.core.urlresolvers import reverse
+from functools import partial
 
 
 def get_file_list(res_type, name):
@@ -11,8 +12,8 @@ def get_file_list(res_type, name):
 	return medium[name]
 
 
-def changed(res_type, name):
-	file_name = get_output_path(res_type, name)
+def changed(request, res_type, name):
+	file_name = get_output_path(request, res_type, name)
 	changed = False
 
 	if os.path.isfile(file_name):
@@ -37,14 +38,18 @@ def get_res_name(res_type, res_name):
 	return '%s/%s.%s' % (settings.RAPE_PATH, res_name, get_postfix(res_type, True))
 
 
-def get_output_name(res_type, name):
+def get_output_name(request, res_type, name):
+	protocol = 'http'
 	arg = 'plain'
+
+	if request.is_secure(): protocol = 'https'
 	if settings.RAPE_PACK: arg = 'packed'
-	return 'rape/%s/%s/%s.%s.%s' % (res_type, name, arg, settings.RAPE_SERIAL, get_postfix(res_type))
+
+	return 'rape/%s/%s/%s-%s-%s.%s.%s' % (res_type, name, protocol, request.META['HTTP_HOST'], arg, settings.RAPE_SERIAL, get_postfix(res_type))
 
 
-def get_output_path(res_type, name):
-	return '%s/%s' % (settings.STATIC_ROOT, get_output_name(res_type, name))
+def get_output_path(request, res_type, name):
+	return '%s/%s' % (settings.STATIC_ROOT, get_output_name(request, res_type, name))
 
 
 def get_output_url(res_type, name):
@@ -73,26 +78,36 @@ def get_content_type(res_type):
 	return header
 
 
-def get_resource_url_from_match(matchobj):
-	return rape_static_url(matchobj.group(1))
+def get_resource_url_from_match(matchobj, request=None):
+	return rape_static_url(matchobj.group(1), request)
 
 
-def get_raped_script_url_from_match(matchobj):
-	return reverse('raped_script', args=[settings.RAPE_SERIAL, matchobj.group(1)])
+def add_host(url, request):
+	if request:
+		protocol = 'http'
+		if request.is_secure(): protocol = 'https'
+
+		url = '%s://%s%s' % (protocol, request.META['HTTP_HOST'], url)
+
+	return url
+
+def get_raped_script_url_from_match(matchobj, request=None):
+	return add_host(reverse('raped_script', args=[settings.RAPE_SERIAL, matchobj.group(1)]), request)
 
 
-def get_raped_style_url_from_match(matchobj):
-	return reverse('raped_style', args=[settings.RAPE_SERIAL, matchobj.group(1)])
+def get_raped_style_url_from_match(matchobj, request=None):
+	return add_host(reverse('raped_style', args=[settings.RAPE_SERIAL, matchobj.group(1)]), request)
 
 
-def replace_resource_urls(string):
-	string = re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', get_resource_url_from_match, string)
-	string = re.sub(r'\{\%\sraped_script\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', get_raped_script_url_from_match, string)
-	string = re.sub(r'\{\%\sraped_style\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', get_raped_style_url_from_match, string)
+def replace_resource_urls(request, string):
+	string = re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', partial(get_resource_url_from_match, request=request), string)
+	string = re.sub(r'\{\%\sraped_script\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', partial(get_raped_script_url_from_match, request=request), string)
+	string = re.sub(r'\{\%\sraped_style\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', partial(get_raped_style_url_from_match, request=request), string)
 	return string
 
 
 def rape_static_url(url, request=None):
+	print "%s" %  request
 	if request:
 		if request.is_secure(): protocol = 'https'
 		else: protocol = 'http'
