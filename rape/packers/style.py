@@ -4,12 +4,12 @@ from scss import Scss
 
 import os, os.path, shutil
 
-def pack(file_list, output, minify=False):
+def pack(request, file_list, output, minify=False):
 	str_css = ""
 
 	for res_name in file_list:
 		fp = open(helpers.get_res_name('style', res_name), "r")
-		str_css += helpers.replace_resource_urls(fp.read())
+		str_css += helpers.replace_resource_urls(request, fp.read())
 		fp.close()
 
 	compiler = Scss()

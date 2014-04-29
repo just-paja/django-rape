@@ -3,12 +3,12 @@ from rape import helpers, settings
 import os, os.path, shutil
 
 
-def pack(file_list, output, minify=False):
+def pack(request, file_list, output, minify=False):
 	str_js = ""
 
 	for res_name in file_list:
 		fp = open(helpers.get_res_name('script', res_name), "r")
-		str_js += helpers.replace_resource_urls(fp.read())
+		str_js += helpers.replace_resource_urls(request, fp.read())
 		fp.close()
 
 	if settings.RAPE_PACK:
