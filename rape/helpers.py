@@ -107,7 +107,6 @@ def replace_resource_urls(request, string):
 
 
 def rape_static_url(url, request=None):
-	print "%s" %  request
 	if request:
 		if request.is_secure(): protocol = 'https'
 		else: protocol = 'http'
