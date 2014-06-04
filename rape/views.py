@@ -15,6 +15,10 @@ def resource(request, serial, name, res_type):
 			response = HttpResponse(re.sub(r'{{HOST}}', request.META['HTTP_HOST'], fp.read()))
 			fp.close()
 
+			if settings.RAPE_CORS_ORIGIN:  response['Access-Control-Allow-Origin']  = settings.RAPE_CORS_ORIGIN
+			if settings.RAPE_CORS_METHODS: response['Access-Control-Allow-Methods'] = settings.RAPE_CORS_METHODS
+			if settings.RAPE_CORS_HEADERS: response['Access-Control-Allow-Headers'] = settings.RAPE_CORS_HEADERS
+
 			response['Content-Type'] = helpers.get_content_type(res_type)
 			response['Cache-Control'] = 'public, max-age=86400'
 

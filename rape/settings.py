@@ -18,3 +18,9 @@ RAPE_PROJECT_NAME = getattr(settings, 'PROJECT_NAME')
 STATIC_ROOT = getattr(settings, 'STATIC_ROOT')
 
 STATIC_URL = getattr(settings, 'STATIC_URL')
+
+RAPE_CORS_ORIGIN  = getattr(settings, 'RAPE_CORS_ORIGIN', None)
+
+RAPE_CORS_METHODS = getattr(settings, 'RAPE_CORS_METHODS', None)
+
+RAPE_CORS_HEADERS = getattr(settings, 'RAPE_CORS_METHODS', None)
