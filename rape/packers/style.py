@@ -2,7 +2,7 @@ from StringIO import StringIO
 from rape import helpers, settings
 from scss import Scss
 
-import os, os.path, shutil
+import os, os.path, shutil, json
 
 def pack(request, file_list, output, minify=False):
 	str_css = ""
@@ -14,6 +14,9 @@ def pack(request, file_list, output, minify=False):
 
 	compiler = Scss()
 	str_css = compiler.compile(str_css)
+
+	if not settings.RAPE_PACK:
+		str_css = "/* File list:\n%s\n*/\n\n" % json.dumps(file_list, indent=4, sort_keys=True) + str_css
 
 	#~ str_css = parser.loads()
 	#~ print "%s" % str_css

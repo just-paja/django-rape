@@ -1,10 +1,13 @@
 from StringIO import StringIO
 from rape import helpers, settings
-import os, os.path, shutil
+import os, os.path, shutil, json
 
 
 def pack(request, file_list, output, minify=False):
 	str_js = ""
+
+	if not settings.RAPE_PACK:
+		str_js = "/* File list:\n%s\n*/\n\n" % json.dumps(file_list, indent=4, sort_keys=True)
 
 	for res_name in file_list:
 		fp = open(res_name, "r")
