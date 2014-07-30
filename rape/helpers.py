@@ -30,24 +30,39 @@ path to directory with package.json or bower.json, it reads metadata and
 includes correct file paths
 
 * res_type Is string defining resource type ('style', 'script')
-* fp       Is path. Could be absolute from fs root or relative.
+* fp_in    Is path. Could be absolute from fs root or relative.
 
 Returns list of paths
 """
-def checkout_file(res_type, fp):
+def checkout_file(res_type, fp_in):
 	post  = get_postfix(res_type, True)
 	files = []
+	fp    = fp_in
+	fp_p  = '%s.%s' % (fp, post)
+
+
+	# Path does not exist, try adding postfix
+	if os.path.exists(fp_p):
+		fp = fp_p
+
 
 	# User passed path that exists
 	if os.path.exists(fp):
 		fp_path = fp
 
+
 		# It is a symlink, lookup its' real path
 		if os.path.islink(fp_path):
 			fp_path = os.path.realpath(fp_path)
 
+
+		# User passed direct path to a file
+		if os.path.isfile(fp_path):
+			files.append(fp_path)
+
+
 		# It is a directory
-		if os.path.isdir(fp_path):
+		elif os.path.isdir(fp_path):
 			path_bow = '%s/bower.json' % fp_path
 			path_pkg = '%s/package.json' % fp_path
 
@@ -99,21 +114,9 @@ def checkout_file(res_type, fp):
 
 				files += found
 
-		# User passed direct path to a file
-		else:
-			files.append(fp)
-
-
-	# Path not found, check for path.postfix
+	# Nope, this file really can't be included
 	else:
-		fp_tmp = '%s.%s' % (fp, post)
-
-		if os.path.exists(fp_tmp):
-			files.append(fp_tmp)
-
-		# Nope, this file really can't be included
-		else:
-			raise Exception('Couldn\'t find %s resource named "%s"' % (res_type, fp))
+		raise Exception('Couldn\'t find %s resource named "%s"' % (res_type, fp_in))
 
 	return files
 
