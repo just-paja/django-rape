@@ -18,6 +18,16 @@ def get_file_list(res_type, name):
 	return file_list
 
 
+"""
+Check resource path and try to include all resources if directory. When passed
+path to directory with package.json or bower.json, it reads metadata and
+includes correct file paths
+
+* res_type Is string defining resource type ('style', 'script')
+* fp       Is path. Could be absolute from fs root or relative.
+
+Returns list
+"""
 def checkout_file(res_type, fp):
 	post  = get_postfix(res_type, True)
 	files = []
