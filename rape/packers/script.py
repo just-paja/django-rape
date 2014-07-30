@@ -7,7 +7,7 @@ def pack(request, file_list, output, minify=False):
 	str_js = ""
 
 	for res_name in file_list:
-		fp = open(helpers.get_res_name('script', res_name), "r")
+		fp = open(res_name, "r")
 		str_js += helpers.replace_resource_urls(request, fp.read())
 		fp.close()
 

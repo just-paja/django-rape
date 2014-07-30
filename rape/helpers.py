@@ -1,15 +1,70 @@
 from datetime import timedelta
-import os, time, settings, helpers, re
 from django.core.urlresolvers import reverse
 from functools import partial
+import os, time, settings, helpers, re, json, glob
+
 
 
 def get_file_list(res_type, name):
 	medium = settings.RAPED_SCRIPTS
-
 	if res_type == 'style': medium = settings.RAPED_STYLES
+	files = medium[name]
+	file_list = []
 
-	return medium[name]
+	for fp in files:
+		file_list += checkout_file(res_type, '%s/%s' % (settings.RAPE_PATH, fp))
+
+	print '%s' % file_list
+	return file_list
+
+
+
+def checkout_file(res_type, fp):
+	post  = get_postfix(res_type, True)
+	files = []
+
+	if os.path.exists(fp):
+		fp_path = fp
+
+		if os.path.islink(fp_path):
+			fp_path = os.path.realpath(fp_path)
+
+		if os.path.isdir(fp_path):
+			path_pkg = '%s/package.json' % fp_path
+
+			if os.path.exists(path_pkg):
+				point = open(path_pkg)
+				meta  = json.loads(point.read())
+				point.close()
+
+				if 'include' in meta:
+					for fp_pkg in meta['include']:
+						files += checkout_file(res_type, '%s/%s' % (fp, fp_pkg))
+
+				else:
+					raise Exception('Found "package.json" but "include" is not defined in %s.' % path_pkg)
+
+			else:
+				found = glob.glob('%s/**' % fp_path)
+
+				for key,fp_child in enumerate(found):
+					if os.path.isdir(fp_child) or os.path.islink(fp_child):
+						found.pop(key)
+
+				files += found
+
+		else:
+			files.append(fp)
+	else:
+		fp_tmp = '%s.%s' % (fp, post)
+
+		if os.path.exists(fp_tmp):
+			files.append(fp_tmp)
+		else:
+			raise Exception('Couldn\'t find %s resource named "%s"' % (res_type, fp))
+
+	return files
+
 
 
 def changed(request, res_type, name):
@@ -21,7 +76,7 @@ def changed(request, res_type, name):
 		file_list = get_file_list(res_type, name)
 
 		for res_name in file_list:
-			res_path = get_res_name(res_type, res_name)
+			res_path = res_name
 			res_last_change = os.path.getmtime(res_path)
 
 			if res_last_change > last_change:
