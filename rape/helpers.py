@@ -18,34 +18,64 @@ def get_file_list(res_type, name):
 	return file_list
 
 
-
 def checkout_file(res_type, fp):
 	post  = get_postfix(res_type, True)
 	files = []
 
+	# User passed path that exists
 	if os.path.exists(fp):
 		fp_path = fp
 
+		# It is a symlink, lookup its' real path
 		if os.path.islink(fp_path):
 			fp_path = os.path.realpath(fp_path)
 
+		# It is a directory
 		if os.path.isdir(fp_path):
+			path_bow = '%s/bower.json' % fp_path
 			path_pkg = '%s/package.json' % fp_path
 
-			if os.path.exists(path_pkg):
+			has_bow = os.path.exists(path_bow)
+			has_pkg = os.path.exists(path_pkg)
+
+
+			# Look for bower.json and include file defined as key 'main'
+			if has_bow:
+				point = open(path_bow)
+				meta  = json.loads(point.read())
+				point.close()
+
+				if 'main' in meta:
+					files += checkout_file(res_type, '%s/%s' % (fp, meta['main']))
+
+				elif 'include' in meta:
+					for fp_pkg in meta['include']:
+						files += checkout_file(res_type, '%s/%s' % (fp, fp_pkg))
+
+				# We have walked trough bower.json but found nothing useful
+				else:
+					has_bow = False
+
+
+			# Look for package.json and include all files defined as key 'include'
+			if has_pkg and not has_bow:
 				point = open(path_pkg)
 				meta  = json.loads(point.read())
 				point.close()
 
+				# Ignore key 'main', we can't do requires
 				if 'include' in meta:
 					for fp_pkg in meta['include']:
 						files += checkout_file(res_type, '%s/%s' % (fp, fp_pkg))
 
+				# We have walked trough package.json but found nothing useful
 				else:
 					raise Exception('Found "package.json" but "include" is not defined in %s.' % path_pkg)
 
-			else:
-				found = glob.glob('%s/**' % fp_path)
+
+			# No bower.json or package.json was found. Include whole directory
+			if not (has_bow and has_pkg):
+				found = glob.glob('%s/**.%s' % (fp_path, post))
 
 				for key,fp_child in enumerate(found):
 					if os.path.isdir(fp_child) or os.path.islink(fp_child):
@@ -53,13 +83,19 @@ def checkout_file(res_type, fp):
 
 				files += found
 
+		# User passed direct path to a file
 		else:
 			files.append(fp)
+
+
+	# Path not found, check for path.postfix
 	else:
 		fp_tmp = '%s.%s' % (fp, post)
 
 		if os.path.exists(fp_tmp):
 			files.append(fp_tmp)
+
+		# Nope, this file really can't be included
 		else:
 			raise Exception('Couldn\'t find %s resource named "%s"' % (res_type, fp))
 
