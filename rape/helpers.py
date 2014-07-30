@@ -4,7 +4,14 @@ from functools import partial
 import os, time, settings, helpers, re, json, glob
 
 
+"""
+Get file list for predefined resource.
 
+* res_type string Resource type ('style', 'script')
+* name     string Name of the resource defined in settings.RAPED_(STYLES|SCRIPTS)
+
+Returns list of paths
+"""
 def get_file_list(res_type, name):
 	medium = settings.RAPED_SCRIPTS
 	if res_type == 'style': medium = settings.RAPED_STYLES
@@ -26,7 +33,7 @@ includes correct file paths
 * res_type Is string defining resource type ('style', 'script')
 * fp       Is path. Could be absolute from fs root or relative.
 
-Returns list
+Returns list of paths
 """
 def checkout_file(res_type, fp):
 	post  = get_postfix(res_type, True)
