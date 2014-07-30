@@ -77,7 +77,13 @@ def checkout_file(res_type, fp_in):
 				point.close()
 
 				if 'main' in meta:
-					files += checkout_file(res_type, '%s/%s' % (fp, meta['main']))
+					main = meta['main']
+
+					if not type(main) is list:
+						main = [main]
+
+					for main_fp in main:
+						files += checkout_file(res_type, '%s/%s' % (fp, main_fp))
 
 				elif 'include' in meta:
 					for fp_pkg in meta['include']:
