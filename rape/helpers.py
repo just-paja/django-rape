@@ -21,7 +21,6 @@ def get_file_list(res_type, name):
 	for fp in files:
 		file_list += checkout_file(res_type, '%s/%s' % (settings.RAPE_PATH, fp))
 
-	print '%s' % file_list
 	return file_list
 
 
