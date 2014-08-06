@@ -257,7 +257,19 @@ def get_raped_style_url_from_match(matchobj, request=None):
 	return add_host(reverse('raped_style', args=[settings.RAPE_SERIAL, matchobj.group(1)]), request)
 
 
-def replace_resource_urls(request, string):
+def get_resource_url_from_match_raw(matchobj, res_name=None):
+	path = res_name[len(settings.RAPE_PATH)+1:]
+	path = path.split('/')
+	path = path[0:len(path)-1]
+	path = '/'.join(path)
+	return 'url(%s)' % rape_static_url('%s/%s' % (path, matchobj.group(1)) )
+
+
+def replace_resource_urls(request, string, res_name):
+	# replace raw url() in style
+	string = re.sub(r"url\(['\"]*([\/a-zA-Z0-9\.\-\_\?\#]+)['\"]*\)", partial(get_resource_url_from_match_raw, res_name=res_name), string)
+
+	# replace tags
 	string = re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', partial(get_resource_url_from_match, request=request), string)
 	string = re.sub(r'\{\%\sraped_script\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', partial(get_raped_script_url_from_match, request=request), string)
 	string = re.sub(r'\{\%\sraped_style\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', partial(get_raped_style_url_from_match, request=request), string)
