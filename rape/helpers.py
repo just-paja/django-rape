@@ -267,7 +267,7 @@ def get_resource_url_from_match_raw(matchobj, res_name=None):
 
 def replace_resource_urls(request, string, res_name):
 	# replace raw url() in style
-	string = re.sub(r"url\(['\"]*([a-zA-Z0-9\.\-\/]+\.(png|jpg)[\?a-z0-9]*)['\"]*\)", partial(get_resource_url_from_match_raw, res_name=res_name), string)
+	string = re.sub(r"url\(['\"]*([\/a-zA-Z0-9\.\-\_\?\#]+)['\"]*\)", partial(get_resource_url_from_match_raw, res_name=res_name), string)
 
 	# replace tags
 	string = re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', partial(get_resource_url_from_match, request=request), string)
