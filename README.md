@@ -17,13 +17,13 @@ Simple tool, that helps you minimize your traffic, site loading time and browser
 
 ### Dependencies 
 
-Rape requires scss lib for parsing scss.
-https://github.com/klen/python-scss
+- [python-scss](https://github.com/klen/python-scss) for parsing scss.
+- [UgliPyJS](https://github.com/OiNutter/uglipyjs) for javascript minifications.
+
 
 
 ### Known issues
 
-- Scss @import will not work
 - Scss code errors will result into fatal error while parsing
 
 
@@ -66,8 +66,8 @@ template.html
 	
 	<html>
 	<head>
-		<script type="text/javascript" src="{% raped_script 'foo' %}"></script>
-		<link rel="stylesheet" type="text/css" href="{% raped_style 'screen' %}">
+		{% tag_script 'foo' %}
+		{% tag_style 'screen' %}">
 		...
 
 And that's it! Rape should handle the rest of it.
