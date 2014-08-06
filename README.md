@@ -17,8 +17,9 @@ Simple tool, that helps you minimize your traffic, site loading time and browser
 
 ### Dependencies 
 
-Rape requires scss lib for parsing scss.
-https://github.com/klen/python-scss
+- [https://github.com/klen/python-scss](python-scss) for parsing scss.
+- [https://github.com/OiNutter/uglipyjs](UgliPyJS) for minifying javascript.
+
 
 
 ### Known issues
