@@ -9,7 +9,7 @@ def pack(request, file_list, output, minify=False):
 
 	for res_name in file_list:
 		fp = open(res_name, "r")
-		str_css += helpers.replace_resource_urls(request, fp.read())
+		str_css += helpers.replace_resource_urls(request, fp.read(), res_name)
 		fp.close()
 
 	compiler = Scss()
