@@ -65,9 +65,11 @@ def checkout_file(res_type, fp_in):
 		elif os.path.isdir(fp_path):
 			path_bow = '%s/bower.json' % fp_path
 			path_pkg = '%s/package.json' % fp_path
+			path_cmp = '%s/component.json' % fp_path
 
 			has_bow = os.path.exists(path_bow)
 			has_pkg = os.path.exists(path_pkg)
+			has_cmp = os.path.exists(path_cmp)
 
 
 			# Look for bower.json and include file defined as key 'main'
@@ -94,8 +96,24 @@ def checkout_file(res_type, fp_in):
 					has_bow = False
 
 
+			# Look for component.json and include files defined as key 'scripts'
+			if has_cmp and not has_bow:
+				point = open(path_cmp)
+				meta  = json.loads(point.read())
+				point.close()
+
+				# Key scripts should be list
+				if 'scripts' in meta:
+					for fp_pkg in meta['scripts']:
+						files += checkout_file(res_type, '%s/%s' % (fp, fp_pkg))
+
+				# We have walked trough component.json but found nothing useful
+				else:
+					has_cmp = False
+
+
 			# Look for package.json and include all files defined as key 'include'
-			if has_pkg and not has_bow:
+			if has_pkg and not (has_bow or has_cmp):
 				point = open(path_pkg)
 				meta  = json.loads(point.read())
 				point.close()
