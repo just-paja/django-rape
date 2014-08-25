@@ -130,13 +130,18 @@ def checkout_file(res_type, fp_in):
 
 			# No bower.json or package.json was found. Include whole directory
 			if not (has_bow or has_pkg):
-				found = glob.glob('%s/**.%s' % (fp_path, post))
+				found  = glob.glob('%s/**' % (fp_path))
+				append = []
 
 				for key,fp_child in enumerate(found):
-					if os.path.isdir(fp_child) or os.path.islink(fp_child):
+					if os.path.isdir(fp_child):
+						append += checkout_file(res_type, fp_child)
+					elif os.path.islink(fp_child):
 						found.pop(key)
+					else:
+						append += [fp_child]
 
-				files += found
+				files += append
 
 	# Nope, this file really can't be included
 	else:
