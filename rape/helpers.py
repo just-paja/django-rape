@@ -42,7 +42,7 @@ def checkout_file(res_type, fp_in):
 
 
 	# Path does not exist, try adding postfix
-	if os.path.exists(fp_p):
+	if not os.path.exists(fp):
 		fp = fp_p
 
 
@@ -129,7 +129,7 @@ def checkout_file(res_type, fp_in):
 
 
 			# No bower.json or package.json was found. Include whole directory
-			if not (has_bow and has_pkg):
+			if not (has_bow or has_pkg):
 				found = glob.glob('%s/**.%s' % (fp_path, post))
 
 				for key,fp_child in enumerate(found):
