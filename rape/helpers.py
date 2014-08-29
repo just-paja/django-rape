@@ -39,11 +39,19 @@ def checkout_file(res_type, fp_in):
 	files = []
 	fp    = fp_in
 	fp_p  = '%s.%s' % (fp, post)
+	dirs  = False
+
+	if re.search('\/$', fp):
+		dirs = True
 
 
-	# Path does not exist, try adding postfix
-	if not os.path.exists(fp):
-		fp = fp_p
+	# Prefer files with postfix over other
+	if dirs:
+		if not os.path.exists(fp):
+			fp = fp_p
+	else:
+		if os.path.exists(fp_p) and os.path.isfile(fp_p):
+			fp = fp_p
 
 
 	# User passed path that exists
@@ -135,7 +143,11 @@ def checkout_file(res_type, fp_in):
 
 				for key,fp_child in enumerate(found):
 					if os.path.isdir(fp_child):
-						append += checkout_file(res_type, fp_child)
+
+						# Append trailing "/" to the end of path to this method knows we
+						# prefer checking out whole directory over files with identical name
+						append += checkout_file(res_type, "%s/" % fp_child)
+
 					elif os.path.islink(fp_child):
 						found.pop(key)
 					else:
