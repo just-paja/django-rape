@@ -12,9 +12,11 @@ Get file list for predefined resource.
 
 Returns list of paths
 """
-def get_file_list(res_type, name):
-	medium = settings.RAPED_SCRIPTS
-	if res_type == 'style': medium = settings.RAPED_STYLES
+def get_file_list(res_type, name, medium = None):
+	if not medium:
+		medium = settings.RAPED_SCRIPTS
+		if res_type == 'style': medium = settings.RAPED_STYLES
+
 	files = medium[name]
 	file_list = []
 
@@ -172,14 +174,14 @@ Has this predefined resource changed since its' last compilation?
 
 Returns bool
 """
-def changed(request, res_type, name):
+def changed(request, res_type, name, medium = None):
 	file_name = get_output_path(request, res_type, name)
 	changed = False
 
 	# Check if the resource is compiled
 	if os.path.isfile(file_name):
 		last_change = os.path.getmtime(file_name)
-		file_list = get_file_list(res_type, name)
+		file_list = get_file_list(res_type, name, medium)
 
 		# Walk trough all files from this resource
 		for res_name in file_list:
@@ -258,9 +260,10 @@ def get_postfix(res_type, home=False):
 	return postfix
 
 
-def exists(res_type, name):
-	medium = settings.RAPED_SCRIPTS
-	if res_type == 'style': medium = settings.RAPED_STYLES
+def exists(res_type, name, medium=None):
+	if not medium:
+		medium = settings.RAPED_SCRIPTS
+		if res_type == 'style': medium = settings.RAPED_STYLES
 
 	return name in medium
 

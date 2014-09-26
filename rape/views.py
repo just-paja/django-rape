@@ -4,12 +4,12 @@ from packers import script, style
 import re, os, time, settings, helpers
 
 
-def resource(request, serial, name, res_type):
+def resource(request, serial, name, res_type, medium=None):
 	if int(serial) == settings.RAPE_SERIAL:
-		if helpers.exists(res_type, name):
-			if helpers.changed(request, res_type, name):
+		if helpers.exists(res_type, name, medium):
+			if helpers.changed(request, res_type, name, medium):
 				helpers.check_dirs(res_type)
-				generate_resource(request, res_type, name)
+				generate_resource(request, res_type, name, medium)
 
 			fp = open(helpers.get_output_path(request, res_type, name))
 			response = HttpResponse(re.sub(r'{{HOST}}', request.META['HTTP_HOST'], fp.read()))
@@ -28,10 +28,10 @@ def resource(request, serial, name, res_type):
 		return HttpResponseRedirect(reverse(('raped_%s' % res_type), args=(settings.RAPE_SERIAL, name)))
 
 
-def generate_resource(request, res_type, name):
+def generate_resource(request, res_type, name, medium=None):
 	print "Generating %s %s" % (res_type, name)
 	output = helpers.get_output_path(request, res_type, name)
-	file_list = helpers.get_file_list(res_type, name)
+	file_list = helpers.get_file_list(res_type, name, medium)
 
 	if res_type == 'script': script.pack(request, file_list, output, settings.RAPE_PACK)
 	elif res_type == 'style': style.pack(request, file_list, output, settings.RAPE_PACK)
