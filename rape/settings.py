@@ -25,6 +25,21 @@ RAPE_CORS_METHODS = getattr(settings, 'RAPE_CORS_METHODS', None)
 
 RAPE_CORS_HEADERS = getattr(settings, 'RAPE_CORS_METHODS', None)
 
+"""
+Define what tags should be replaced inside resources.
+
+{
+	# This is the part behind {%. "{% tag_name ... %}"
+	'tag':'name_of_tag_that_will_be_replaced',
+
+	# Method will receive matchobj and rq as parameters
+	'replace':'absolute.path.for.replacement.method',
+
+	# This string will be used for regex matching arguments of the tag
+	'match':'regex+(like)+string'
+}
+
+"""
 RAPE_TAGS = getattr(settings, 'RAPE_TAGS', [
 	{
 		'tag':'raped_url',
