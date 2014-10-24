@@ -305,7 +305,7 @@ def replace_resource_urls(rq, string):
 			tag_match = tag['match']
 
 		# Set up regex rule to match "{% tag_name predefined_match %}"
-		rule = '\{\%%\s%s\s%s\s\%%\}' % (tag['tag'], tag_match)
+		rule = '\{\%%\s?%s\s%s\s?\%%\}' % (tag['tag'], tag_match)
 
 		# Module path for replace function
 		path = tag['replace'].split('.')
