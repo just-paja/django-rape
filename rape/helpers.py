@@ -4,6 +4,9 @@ from functools import partial
 import os, time, settings, helpers, re, json, glob
 
 
+TAG_MATCH_DEFAULT = '[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?'
+
+
 """
 Get file list for predefined resource.
 
@@ -274,10 +277,6 @@ def get_content_type(res_type):
 	return header
 
 
-def get_resource_url_from_match(matchobj, request=None):
-	return rape_static_url(matchobj.group(1), request)
-
-
 def add_host(url, request):
 	if request:
 		protocol = 'http'
@@ -287,18 +286,39 @@ def add_host(url, request):
 
 	return url
 
-def get_raped_script_url_from_match(matchobj, request=None):
-	return add_host(reverse('raped_script', args=[settings.RAPE_SERIAL, matchobj.group(1)]), request)
 
+"""
+Replaces resource {% %} tag values inside the requested resource content
 
-def get_raped_style_url_from_match(matchobj, request=None):
-	return add_host(reverse('raped_style', args=[settings.RAPE_SERIAL, matchobj.group(1)]), request)
+* rq     request Resource request
+* string string  Resource content
+* returns string Content with replaced values
 
+"""
+def replace_resource_urls(rq, string):
+	tags = settings.RAPE_TAGS
 
-def replace_resource_urls(request, string):
-	string = re.sub(r'\{\%\sraped_url\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', partial(get_resource_url_from_match, request=request), string)
-	string = re.sub(r'\{\%\sraped_script\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', partial(get_raped_script_url_from_match, request=request), string)
-	string = re.sub(r'\{\%\sraped_style\s[\'\"]?([\/a-zA-Z0-9\.\-\_\?\#]+)[\'\"]?\s\%\}', partial(get_raped_style_url_from_match, request=request), string)
+	for tag in tags:
+		tag_match = TAG_MATCH_DEFAULT
+
+		if 'match' in tag:
+			tag_match = tag['match']
+
+		# Set up regex rule to match "{% tag_name predefined_match %}"
+		rule = '\{\%%\s%s\s%s\s\%%\}' % (tag['tag'], tag_match)
+
+		# Module path for replace function
+		path = tag['replace'].split('.')
+
+		# Replace function name
+		name = path.pop()
+
+		# Import replace function module and function
+		mod  = __import__('.'.join(path), fromlist=[''])
+		fn   = getattr(mod, name)
+
+		string = re.sub(rule, partial(fn, rq=rq), string)
+
 	return string
 
 

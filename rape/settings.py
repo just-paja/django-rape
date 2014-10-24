@@ -24,3 +24,20 @@ RAPE_CORS_ORIGIN  = getattr(settings, 'RAPE_CORS_ORIGIN', None)
 RAPE_CORS_METHODS = getattr(settings, 'RAPE_CORS_METHODS', None)
 
 RAPE_CORS_HEADERS = getattr(settings, 'RAPE_CORS_METHODS', None)
+
+RAPE_TAGS = getattr(settings, 'RAPE_TAGS', [
+	{
+		'tag':'raped_url',
+		'replace':'rape.tags.raped_url'
+	},
+
+	{
+		'tag':'raped_script',
+		'replace':'rape.tags.raped_script'
+	},
+
+	{
+		'tag':'raped_style',
+		'replace':'rape.tags.raped_style'
+	}
+])
