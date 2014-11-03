@@ -84,6 +84,10 @@ def checkout_file(res_type, fp_in):
 			has_pkg = os.path.exists(path_pkg)
 			has_cmp = os.path.exists(path_cmp)
 
+			if not has_bow:
+				path_bow = '%s/.bower.json' % fp_path
+				has_bow = os.path.exists(path_bow)
+
 
 			# Look for bower.json and include file defined as key 'main'
 			if has_bow:
