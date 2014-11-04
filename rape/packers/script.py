@@ -11,7 +11,8 @@ def pack(request, file_list, output, minify=False):
 
 	for res_name in file_list:
 		fp = open(res_name, "r")
-		str_js += helpers.replace_resource_urls(request, fp.read())
+		data = unicode(fp.read(), 'utf-8')
+		str_js += helpers.replace_resource_urls(request, data)
 		fp.close()
 
 	if settings.RAPE_PACK:
@@ -19,5 +20,5 @@ def pack(request, file_list, output, minify=False):
 
 	helpers.check_dir(os.path.dirname(output))
 	ofp = open(output, "w+")
-	ofp.write(str_js)
+	ofp.write(str_js.encode('utf-8'))
 	ofp.close()

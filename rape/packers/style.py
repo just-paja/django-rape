@@ -9,7 +9,8 @@ def pack(request, file_list, output, minify=False):
 
 	for res_name in file_list:
 		fp = open(res_name, "r")
-		str_css += helpers.replace_resource_urls(request, fp.read())
+		data = unicode(fp.read(), 'utf-8')
+		str_css += helpers.replace_resource_urls(request, data)
 		fp.close()
 
 	compiler = Scss()
@@ -23,7 +24,7 @@ def pack(request, file_list, output, minify=False):
 
 	helpers.check_dir(os.path.dirname(output))
 	ofp = open(output, "w+")
-	ofp.write(str_css)
+	ofp.write(str_css.encode('utf-8'))
 	ofp.close()
 
 
